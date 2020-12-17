@@ -1,7 +1,11 @@
+<input [(ngModel)]="SearchText" (keyup)='FilterTable()' type="text" name="moviename" value="" placeholder="Search by Name" />
+
 <div *ngIf="Movies.length && Movies; else NoMovies">
 
   <button (click)="ToggleImage()" class="btn btn-primary">{{HideImage ? "Hide Image" : "Show Image"}}</button>
+  <i>{{SearchText}}</i>
 
+  <input type="range" name="changeborder" [(ngModel)]='borderRadius' min="0" max="50" />
 
   <h2>We Have {{Movies.length}} movies available</h2>
   <table class="table table-dark text-center table-hover table-responsive">
@@ -20,23 +24,24 @@
     <tbody>
       <tr *ngFor="let movie of Movies">
         <td *ngIf="HideImage" class="align-middle">
-          <img [style.border-radius.px]="borderRadius" [title]="movie.Name" style="max-width: 100px;" class="img-fluid" [src]="movie.PhotoUrl" />
+          <img [style.border-radius.px]="borderRadius" [title]="movie.Name" style="max-width: 100px;" class="img-fluid"
+            [src]="movie.PhotoUrl" />
         </td>
-        <td class="align-middle">{{movie.Name}}</td>
-        <td class="align-middle">{{movie.Year.getFullYear()}}</td>
+        <td class="align-middle">{{movie.Name | uppercase}}</td>
+        <td class="align-middle">{{movie.Year | date | uppercase}} </td>
         <td class="align-middle">
           <ul class="list-unstyled">
             <li *ngFor="let genre of movie.Genres">{{genre}}</li>
           </ul>
         </td>
-        <td class="align-middle">{{movie.Director}}</td>
+        <td class="align-middle">{{movie.Director | addDash}}</td>
         <td class="align-middle">
           <ul class="list-unstyled">
-            <li *ngFor="let actor of movie.Actors">{{actor}}</li>
+            <li *ngFor="let actor of movie.Actors">{{actor | addDash}}</li>
           </ul>
         </td>
         <td class="align-middle">{{movie.Rating}}</td>
-        <td class="align-middle">{{movie.Price}}</td>
+        <td class="align-middle">{{movie.Price | currency:'EUR':'symbol' }}</td>
       </tr>
     </tbody>
   </table>
@@ -44,7 +49,7 @@
 
 
 <ng-template #NoMovies>
-  <div> 
+  <div>
     No Movies Available :(
   </div>
 </ng-template>
